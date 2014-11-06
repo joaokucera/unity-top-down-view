@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ZombieController : MonoBehaviour {
 	
@@ -7,6 +8,7 @@ public class ZombieController : MonoBehaviour {
 	public float turnSpeed;
 
 	private Vector2 moveDirection;
+	private List<Transform> congaLine = new List<Transform>();
 
 	[SerializeField] private PolygonCollider2D[] colliders;
 	private int currentColliderIndex = 0;
@@ -44,4 +46,26 @@ public class ZombieController : MonoBehaviour {
 		currentColliderIndex = spriteNumber;
 		colliders [currentColliderIndex].enabled = true;
 	}
+
+	void OnTriggerEnter2D(Collider2D collider)
+	{
+		if (collider.CompareTag("Cat"))
+		{
+			Transform target = congaLine.Count == 0 ? transform : congaLine[congaLine.Count - 1];
+
+			collider.GetComponent<CatController>().JoinConga(target, moveSpeed, turnSpeed);
+
+			congaLine.Add(collider.transform);
+
+			Debug.Log("Capturou " + congaLine.Count + " gatos.");
+		}
+		else if (collider.CompareTag("Grandma"))
+		{
+			Debug.Log("Colidiu contra a vovó.");
+		}
+	}
+
+
+
+
 }
